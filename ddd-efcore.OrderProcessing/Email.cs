@@ -14,9 +14,20 @@ namespace ddd_efcore.OrderProcessing
         }
 
         // Constructor with validation
-        public Email(string value)
+        private Email(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Email cannot be empty!", nameof(value));
+
+            if (!value.Contains("@"))
+                throw new ArgumentException("Email must contain '@' character!", nameof(value));
+
             _value = value;
+        }
+
+        public static Email Create(string value)
+        {
+            return new Email(value);
         }
 
         public string Value => _value;

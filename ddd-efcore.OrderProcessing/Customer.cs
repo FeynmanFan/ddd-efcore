@@ -11,7 +11,7 @@ namespace ddd_efcore.OrderProcessing
         }
 
         // Private constructor for creating a customer
-        public Customer(Guid id, string name, Email email)
+        private Customer(Guid id, string name, Email email)
         {
             Id = id != Guid.Empty ? id : throw new ArgumentException("Customer ID cannot be empty!");
             Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Name cannot be empty!");
@@ -19,9 +19,14 @@ namespace ddd_efcore.OrderProcessing
             CreatedAt = DateTime.UtcNow;
         }
 
-        public Customer(string name, Email email)
+        private Customer(string name, Email email)
             : this(Guid.NewGuid(), name, email)
         {
+        }
+
+        public static Customer Create(string name, Email email)
+        {
+            return new Customer(name, email);
         }
 
         [Key]

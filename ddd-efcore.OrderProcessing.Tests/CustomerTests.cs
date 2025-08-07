@@ -16,11 +16,11 @@
         public void CreateCustomer_WithValidData_Succeeds()
         {
             // Arrange
-            var email = new Email("john@example.com");
+            var email = Email.Create("john@example.com");
             var name = "John Doe";
 
             // Act
-            var customer = new Customer(name, email);
+            var customer = Customer.Create(name, email);
 
             // Assert
             Assert.NotNull(customer);
@@ -30,26 +30,26 @@
             Assert.True(customer.CreatedAt <= DateTime.UtcNow);
         }
 
-        [Fact(Skip="Not ready for validity yet")]
+        [Fact]
         public void CreateCustomer_WithInvalidEmail_ThrowsException()
         {
             // Arrange
             var name = "John Doe";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => new Email("")); // Empty email
-            Assert.Throws<ArgumentException>(() => new Email("invalid-email")); // No @
+            Assert.Throws<ArgumentException>(() => Email.Create("")); // Empty email
+            Assert.Throws<ArgumentException>(() => Email.Create("invalid-email")); // No @
         }
 
-        [Fact(Skip = "Not ready for validity yet")]
+        [Fact]
         public void CreateCustomer_WithInvalidName_ThrowsException()
         {
             // Arrange
-            var email = new Email("john@example.com");
+            var email = Email.Create("john@example.com");
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => new Customer("", email)); // Empty name
-            Assert.Throws<ArgumentException>(() => new Customer(null, email)); // Null name
+            Assert.Throws<ArgumentException>(() => Customer.Create("", email)); // Empty name
+            Assert.Throws<ArgumentException>(() => Customer.Create(null, email)); // Null name
         }
 
         [Fact]
@@ -57,8 +57,8 @@
         {
             // Arrange
             using var context = CreateDbContext();
-            var email = new Email("john@example.com");
-            var customer = new Customer("John Doe", email);
+            var email = Email.Create("john@example.com");
+            var customer = Customer.Create("John Doe", email);
 
             // Act
             context.Customers.Add(customer);
@@ -78,13 +78,13 @@
         {
             // Arrange
             using var context = CreateDbContext();
-            var originalEmail = new Email("john@example.com");
-            var customer = new Customer("John Doe", originalEmail);
+            var originalEmail = Email.Create("john@example.com");
+            var customer = Customer.Create("John Doe", originalEmail);
             context.Customers.Add(customer);
             context.SaveChanges();
 
             // Act
-            var newEmail = new Email("jane@example.com");
+            var newEmail = Email.Create("jane@example.com");
             customer.UpdateEmail(newEmail);
             context.SaveChanges();
 
