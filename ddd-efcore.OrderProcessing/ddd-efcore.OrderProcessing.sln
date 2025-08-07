@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddd-efcore.OrderProcessing", "ddd-efcore.OrderProcessing.csproj", "{8A500CCF-B60A-44C1-9D04-6B365FE8EBDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddd-efcore.OrderProcessing.Tests", "..\ddd-efcore.OrderProcessing.Tests\ddd-efcore.OrderProcessing.Tests.csproj", "{5134C494-49BC-4C8F-98C1-0FB5694BBE53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A500CCF-B60A-44C1-9D04-6B365FE8EBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A500CCF-B60A-44C1-9D04-6B365FE8EBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A500CCF-B60A-44C1-9D04-6B365FE8EBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A500CCF-B60A-44C1-9D04-6B365FE8EBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5134C494-49BC-4C8F-98C1-0FB5694BBE53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5134C494-49BC-4C8F-98C1-0FB5694BBE53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5134C494-49BC-4C8F-98C1-0FB5694BBE53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5134C494-49BC-4C8F-98C1-0FB5694BBE53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EBDC7F12-2C11-4BD3-B822-076B31B69D7B}
+	EndGlobalSection
+EndGlobal
