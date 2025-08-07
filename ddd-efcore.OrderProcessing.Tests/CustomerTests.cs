@@ -1,6 +1,7 @@
 ﻿namespace ddd_efcore.OrderProcessing.Tests
 {
     using Microsoft.EntityFrameworkCore;
+    using System.ComponentModel.DataAnnotations;
 
     public class CustomerTests
     {
@@ -37,8 +38,8 @@
             var name = "John Doe";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Email.Create("")); // Empty email
-            Assert.Throws<ArgumentException>(() => Email.Create("invalid-email")); // No @
+            Assert.Throws<ValidationException>(() => Email.Create("")); // Empty email
+            Assert.Throws<ValidationException>(() => Email.Create("invalid-email")); // No @
         }
 
         [Fact]
@@ -48,8 +49,8 @@
             var email = Email.Create("john@example.com");
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Customer.Create("", email)); // Empty name
-            Assert.Throws<ArgumentException>(() => Customer.Create(null, email)); // Null name
+            Assert.Throws<ValidationException>(() => Customer.Create("", email)); // Empty name
+            Assert.Throws<ValidationException>(() => Customer.Create(null, email)); // Null name
         }
 
         [Fact]

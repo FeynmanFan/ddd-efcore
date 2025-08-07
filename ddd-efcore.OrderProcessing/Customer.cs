@@ -3,20 +3,22 @@
 namespace ddd_efcore.OrderProcessing
 {
     // Entity: Customer with identity and lifecycle
-    public class Customer
+    public class Customer: DDDObject
     {
         // Private constructor for EF Core
         private Customer()
         {
         }
-
+            
         // Private constructor for creating a customer
         private Customer(Guid id, string name, Email email)
         {
-            Id = id != Guid.Empty ? id : throw new ArgumentException("Customer ID cannot be empty!");
-            Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Name cannot be empty!");
-            Email = email ?? throw new ArgumentNullException(nameof(email));
+            Id = id;
+            Name = name;
+            Email = email;
             CreatedAt = DateTime.UtcNow;
+
+            this.Validate();
         }
 
         private Customer(string name, Email email)
@@ -31,22 +33,37 @@ namespace ddd_efcore.OrderProcessing
 
         [Key]
         public Guid Id { get; private set; } // Unique ID for the customer
+
+        [Required(ErrorMessage="Name is required.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters.")]
         public string Name { get; private set; } // Customer's name
+
+        [Required(ErrorMessage="Email is required.")]
         public Email Email { get; private set; } // Customer's email (value object)
         public DateTime CreatedAt { get; private set; } // When the customer was created
 
         // Domain behavior: Update customer name
         public void UpdateName(string newName)
         {
-            if (string.IsNullOrWhiteSpace(newName))
-                throw new ArgumentException("Name cannot be empty!");
             Name = newName;
+
+            this.Validate();
         }
 
         // Domain behavior: Update email
         public void UpdateEmail(Email newEmail)
         {
-            Email = newEmail ?? throw new ArgumentNullException(nameof(newEmail));
+            Email = newEmail;
+
+            this.Validate();
+        }
+
+        protected override void ValidateSpecific()
+        {
+            if (Id == Guid.Empty)
+            {
+                throw new InvalidOperationException($"Customer ID must be set before validation.");
+            }
         }
     }
 }

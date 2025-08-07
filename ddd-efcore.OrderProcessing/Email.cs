@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace ddd_efcore.OrderProcessing
 {
     // Value Object: Represents an email address (immutable, no identity)
-    public class Email
+    public class Email: DDDObject
     {
         private readonly string _value;
 
@@ -16,13 +17,9 @@ namespace ddd_efcore.OrderProcessing
         // Constructor with validation
         private Email(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Email cannot be empty!", nameof(value));
-
-            if (!value.Contains("@"))
-                throw new ArgumentException("Email must contain '@' character!", nameof(value));
-
             _value = value;
+
+            this.Validate();
         }
 
         public static Email Create(string value)
@@ -30,6 +27,31 @@ namespace ddd_efcore.OrderProcessing
             return new Email(value);
         }
 
+        [Required(ErrorMessage = "Email address cannot be empty!")]
+        [StringLength(254, MinimumLength = 3, ErrorMessage = "Email address must be between 3 and 254 characters!")]
+        [EmailFormat(ErrorMessage = "Invalid email format!")]
         public string Value => _value;
+    }
+
+    public class EmailFormatAttribute: ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null)
+            {
+                return new ValidationResult("Email address cannot be null");
+            }
+
+            string email = value.ToString()!;
+
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            if (!Regex.IsMatch(email, pattern))
+            {
+                return new ValidationResult("Invalid email format");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
