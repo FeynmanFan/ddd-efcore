@@ -2,8 +2,18 @@
 
 namespace ddd_efcore.OrderProcessing
 {
-    public class DDDObject
+    public enum ComparisonStrategy
     {
+        Platonic = 0, 
+        Aristotelian = 1
+    }
+
+    public abstract class DDDObject
+    {
+        protected ComparisonStrategy Strategy { get; set; }
+
+        protected abstract object[] GetComparisonValues();
+
         internal void Validate()
         {
             var className = GetType().Name;
@@ -25,6 +35,59 @@ namespace ddd_efcore.OrderProcessing
         protected virtual void ValidateSpecific()
         {
             // Override in derived classes for specific validation logic
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj is null || GetType() != obj.GetType()) return false;
+
+            var other = (DDDObject)obj;
+            var thisValues = GetComparisonValues();
+            var otherValues = other.GetComparisonValues();
+
+            if (thisValues.Length != otherValues.Length) return false;
+
+            for (int i = 0; i < thisValues.Length; i++)
+            {
+                if (!Equals(thisValues[i], otherValues[i])) return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Strategy == ComparisonStrategy.Platonic)
+            {
+                return (int)GetComparisonValues().First(); // Directly use Id for entities
+            }
+            else // Aristotelian
+            {
+                var values = GetComparisonValues();
+                unchecked
+                {
+                    int hash = 17;
+                    foreach (var value in values)
+                    {
+                        hash = hash * 23 + (value?.GetHashCode() ?? 0);
+                    }
+                    return hash;
+                }
+            }
+        }
+
+        public static bool operator ==(DDDObject? left, DDDObject? right)
+        {
+            if (left is null && right is null) return true;
+            if (left is null || right is null) return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(DDDObject? left, DDDObject? right)
+        {
+            return !(left == right);
         }
     }
 }

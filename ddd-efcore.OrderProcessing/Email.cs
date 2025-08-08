@@ -11,12 +11,14 @@ namespace ddd_efcore.OrderProcessing
         // Parameterless constructor for EF Core
         private Email()
         {
-            _value = null!; // Suppress nullability warning; EF Core sets the value
+            this.Strategy = ComparisonStrategy.Aristotelian;
         }
 
         // Constructor with validation
         private Email(string value)
         {
+            this.Strategy = ComparisonStrategy.Aristotelian;
+
             _value = value;
 
             this.Validate();
@@ -31,6 +33,11 @@ namespace ddd_efcore.OrderProcessing
         [StringLength(254, MinimumLength = 3, ErrorMessage = "Email address must be between 3 and 254 characters!")]
         [EmailFormat(ErrorMessage = "Invalid email format!")]
         public string Value => _value;
+
+        protected override object[] GetComparisonValues()
+        {
+            return [this.Value];
+        }
     }
 
     public class EmailFormatAttribute: ValidationAttribute

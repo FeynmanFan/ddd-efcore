@@ -3,16 +3,19 @@
 namespace ddd_efcore.OrderProcessing
 {
     // Entity: Customer with identity and lifecycle
-    public class Customer: DDDObject
+    public class Customer : DDDObject
     {
         // Private constructor for EF Core
         private Customer()
         {
+            this.Strategy = ComparisonStrategy.Platonic;
         }
             
         // Private constructor for creating a customer
         private Customer(Guid id, string name, Email email)
         {
+            this.Strategy = ComparisonStrategy.Platonic; 
+
             Id = id;
             Name = name;
             Email = email;
@@ -64,6 +67,11 @@ namespace ddd_efcore.OrderProcessing
             {
                 throw new InvalidOperationException($"Customer ID must be set before validation.");
             }
+        }
+
+        protected override object[] GetComparisonValues()
+        {
+            return [this.Id];
         }
     }
 }

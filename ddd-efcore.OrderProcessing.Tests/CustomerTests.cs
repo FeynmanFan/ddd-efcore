@@ -14,6 +14,55 @@
         }
 
         [Fact]
+        public async Task CreateCustomer_ValidInput_SavesToDatabase()
+        {
+            var ctx = TestDbContextFactory.CreateDbContext();
+
+            // Arrange
+            var email = Email.Create("john.doe@example.com");
+            var customer = Customer.Create("John Doe", email);
+
+            // Act
+            ctx.Customers.Add(customer);
+            await ctx.SaveChangesAsync();
+
+            // Assert
+            var savedCustomer = await ctx.Customers
+                .SingleOrDefaultAsync(c => c.Id == customer.Id);
+            Assert.NotNull(savedCustomer);
+            Assert.Equal("John Doe", savedCustomer.Name);
+            Assert.Equal("john.doe@example.com", savedCustomer.Email.Value);
+        }
+
+        [Fact]
+        public void ComparisonStrategy_ValidatesCorrectly()
+        {
+            // Arrange
+            var customer1 = Customer.Create("John Doe", Email.Create("test@test.com"));
+            var customer2 = Customer.Create("John Doe", Email.Create("test@test.com"));
+
+            Assert.NotEqual(customer1, customer2);
+
+            var customer3 = customer1;
+
+            Assert.Equal(customer1, customer3);
+
+            var email1 = Email.Create("test@test.com");
+            var email2 = Email.Create("test@test.com");
+
+            Assert.Equal(email1, email2);
+
+            var email3 = Email.Create("xyz@test.com");
+                
+            Assert.NotEqual(email1, email3);
+
+            Assert.True(customer1 != customer2);
+            Assert.True(customer1 == customer3);
+            Assert.True(email1 == email2);
+            Assert.True(email1 != email3);
+        }
+
+        [Fact]
         public void CreateCustomer_WithValidData_Succeeds()
         {
             // Arrange
