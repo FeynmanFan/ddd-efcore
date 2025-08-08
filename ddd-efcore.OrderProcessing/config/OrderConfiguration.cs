@@ -18,5 +18,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.Status)
             .IsRequired()
             .HasConversion<string>(); // Store enum as string
+
+        builder.HasOne(builder => builder.Payment)
+            .WithOne()
+            .HasForeignKey<Payment>(p => p.OrderId);
     }
 }

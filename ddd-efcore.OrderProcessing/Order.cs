@@ -2,6 +2,8 @@
 {
     public class Order: DDDEntity
     {
+        public Payment? Payment;
+
         private Order() { } // Private constructor for EF Core
 
         internal Order(decimal amount, DateTime orderDate, Guid customerId):base(Guid.NewGuid())
@@ -37,6 +39,11 @@
             if (orderDate > DateTime.UtcNow)
                 throw new OrderValidityException("Order date cannot be in the future.");
             return orderDate;
+        }
+
+        public void Pay()
+        {
+            this.Payment = Payment.Create(this.Amount, DateTime.UtcNow, this.Id);
         }
     }
 

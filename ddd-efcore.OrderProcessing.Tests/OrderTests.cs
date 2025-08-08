@@ -8,7 +8,7 @@
 
     public class OrderTests
     {
-        [Fact(Skip="Slow and non-idempotent")]
+        [Fact(Skip = "Slow and non-idempotent")]
         public async Task CreateOrder_SavesToDatabase()
         {
             var ctx = TestDbContextFactory.CreateDbContext();
