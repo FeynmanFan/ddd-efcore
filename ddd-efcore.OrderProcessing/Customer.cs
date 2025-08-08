@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ddd_efcore.OrderProcessing
+﻿namespace ddd_efcore.OrderProcessing
 {
+    using System.ComponentModel.DataAnnotations;
+
     // Entity: Customer with identity and lifecycle
-    public class Customer : DDDObject
+    public class Customer : DDDEntity
     {
+        private readonly List<Order> _orders = [];
+
         // Private constructor for EF Core
         private Customer()
         {
@@ -12,11 +14,8 @@ namespace ddd_efcore.OrderProcessing
         }
             
         // Private constructor for creating a customer
-        private Customer(Guid id, string name, Email email)
+        private Customer(Guid id, string name, Email email):base(id)
         {
-            this.Strategy = ComparisonStrategy.Platonic; 
-
-            Id = id;
             Name = name;
             Email = email;
             CreatedAt = DateTime.UtcNow;
@@ -34,9 +33,6 @@ namespace ddd_efcore.OrderProcessing
             return new Customer(name, email);
         }
 
-        [Key]
-        public Guid Id { get; private set; } // Unique ID for the customer
-
         [Required(ErrorMessage="Name is required.")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters.")]
         public string Name { get; private set; } // Customer's name
@@ -44,6 +40,8 @@ namespace ddd_efcore.OrderProcessing
         [Required(ErrorMessage="Email is required.")]
         public Email Email { get; private set; } // Customer's email (value object)
         public DateTime CreatedAt { get; private set; } // When the customer was created
+
+        public IReadOnlyList<Order> Orders => _orders.AsReadOnly();
 
         // Domain behavior: Update customer name
         public void UpdateName(string newName)
@@ -61,17 +59,26 @@ namespace ddd_efcore.OrderProcessing
             this.Validate();
         }
 
-        protected override void ValidateSpecific()
+        public void PlaceOrder(decimal amount, DateTime orderDate)
         {
-            if (Id == Guid.Empty)
-            {
-                throw new InvalidOperationException($"Customer ID must be set before validation.");
-            }
+            var order = new Order(amount, orderDate, this.Id);
+            _orders.Add(order);
         }
 
-        protected override object[] GetComparisonValues()
+        public void ConfirmOrder(Guid orderId)
         {
-            return [this.Id];
+            var order = _orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+                throw new OrderValidityException("Order not found.");
+            order.Confirm();
+        }
+
+        public void CancelOrder(Guid orderId)
+        {
+            var order = _orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+                throw new OrderValidityException("Order not found.");
+            order.Cancel();
         }
     }
 }

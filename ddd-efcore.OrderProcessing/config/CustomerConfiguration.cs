@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ddd_efcore.OrderProcessing
+namespace ddd_efcore.OrderProcessing.config
 {
     // EF Core configuration for the Customer entity
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
@@ -17,6 +17,11 @@ namespace ddd_efcore.OrderProcessing
                      .IsRequired()
                      .HasColumnName("Email");
             });
+
+            builder.HasMany(c => c.Orders)
+               .WithOne()
+               .HasForeignKey("CustomerId")
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
