@@ -9,7 +9,7 @@ namespace ddd_efcore.OrderProcessing
         private readonly string _value;
 
         // Parameterless constructor for EF Core
-        private Email()
+        protected Email()
         {
             this.Strategy = ComparisonStrategy.Aristotelian;
         }

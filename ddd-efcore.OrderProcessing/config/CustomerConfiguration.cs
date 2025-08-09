@@ -11,12 +11,25 @@ namespace ddd_efcore.OrderProcessing.config
             // Set Id as the primary key
             builder.HasKey(c => c.Id);
 
+            builder.Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("Name");
+
             builder.OwnsOne(c => c.Email, email =>
             {
                 email.Property(e => e.Value)
                      .IsRequired()
                      .HasColumnName("Email");
             });
+
+            builder.Property(c => c.CustomerType)
+                .IsRequired()
+                .HasConversion(
+                    customerType => (int)customerType.Value,
+                    value => CustomerType.Create(value))
+                .HasColumnName("CustomerType")
+                .HasColumnType("int");
 
             builder.HasMany(c => c.Orders)
                .WithOne()

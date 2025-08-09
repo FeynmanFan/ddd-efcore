@@ -13,14 +13,14 @@
             return new OrderProcessingDbContext(options);
         }
 
-        [Fact(Skip = "Slow and non-idempotent")]
+        [Fact]
         public async Task CreateCustomer_ValidInput_SavesToDatabase()
         {
             var ctx = TestDbContextFactory.CreateDbContext();
 
             // Arrange
-            var email = Email.Create("john.doe@example.com");
-            var customer = Customer.Create("John Doe", email);
+            var email = Email.Create("cbehrens@example.com");
+            var customer = Customer.Create("Chris Behrens", email, CustomerTypeEnum.Business);
 
             // Act
             ctx.Customers.Add(customer);
@@ -30,8 +30,9 @@
             var savedCustomer = await ctx.Customers
                 .SingleOrDefaultAsync(c => c.Id == customer.Id);
             Assert.NotNull(savedCustomer);
-            Assert.Equal("John Doe", savedCustomer.Name);
-            Assert.Equal("john.doe@example.com", savedCustomer.Email.Value);
+            Assert.Equal("Chris Behrens", savedCustomer.Name);
+            Assert.Equal("cbehrens@example.com", savedCustomer.Email.Value);
+            Assert.Equal(CustomerTypeEnum.Business, savedCustomer.CustomerType.Value);
         }
 
         [Fact]

@@ -19,8 +19,13 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired()
             .HasConversion<string>(); // Store enum as string
 
-        builder.HasOne(builder => builder.Payment)
+        builder.Property(o => o.CustomerId)
+            .IsRequired();
+
+        builder.HasOne(o => o.Payment)
             .WithOne()
-            .HasForeignKey<Payment>(p => p.OrderId);
+            .HasForeignKey<Payment>("OrderId")
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

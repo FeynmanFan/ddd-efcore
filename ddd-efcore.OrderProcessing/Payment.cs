@@ -2,7 +2,7 @@
 {
     public class Payment:DDDEntity
     {
-        public Payment() { } // Private constructor for EF Core
+        protected Payment() { } // Private constructor for EF Core
 
         protected Payment(decimal amount, DateTime paymentDate, Guid orderId) : base(Guid.NewGuid())
         {
@@ -10,6 +10,7 @@
             PaidOn = paymentDate;
             OrderId = orderId;
         }
+
         public decimal Amount { get; private set; } // Payment amount
         public DateTime PaidOn { get; private set; } // When the payment was made
         public Guid OrderId { get; private set; } // Foreign key to Order

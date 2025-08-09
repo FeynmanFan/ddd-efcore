@@ -8,29 +8,30 @@
         private readonly List<Order> _orders = [];
 
         // Private constructor for EF Core
-        private Customer()
+        protected Customer()
         {
             this.Strategy = ComparisonStrategy.Platonic;
         }
             
         // Private constructor for creating a customer
-        private Customer(Guid id, string name, Email email):base(id)
+        private Customer(Guid id, string name, Email email, CustomerType customerType) :base(id)
         {
             Name = name;
             Email = email;
             CreatedAt = DateTime.UtcNow;
+            CustomerType = customerType;
 
             this.Validate();
         }
 
-        private Customer(string name, Email email)
-            : this(Guid.NewGuid(), name, email)
+        private Customer(string name, Email email, CustomerType customerType)
+            : this(Guid.NewGuid(), name, email, customerType)
         {
         }
 
-        public static Customer Create(string name, Email email)
+        public static Customer Create(string name, Email email, CustomerTypeEnum customerType = CustomerTypeEnum.Private)
         {
-            return new Customer(name, email);
+            return new Customer(name, email, CustomerType.Create(customerType));
         }
 
         [Required(ErrorMessage="Name is required.")]
@@ -41,7 +42,9 @@
         public Email Email { get; private set; } // Customer's email (value object)
         public DateTime CreatedAt { get; private set; } // When the customer was created
 
-        public IReadOnlyList<Order> Orders => _orders.AsReadOnly();
+        public virtual IReadOnlyList<Order> Orders => _orders.AsReadOnly();
+
+        public virtual CustomerType CustomerType { get; private set; } = CustomerType.Create(CustomerTypeEnum.Private);
 
         // Domain behavior: Update customer name
         public void UpdateName(string newName)

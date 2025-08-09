@@ -2,9 +2,9 @@
 {
     public class Order: DDDEntity
     {
-        public Payment? Payment;
+        public virtual Payment? Payment { get; private set; }
 
-        private Order() { } // Private constructor for EF Core
+        protected Order() { } // Private constructor for EF Core
 
         internal Order(decimal amount, DateTime orderDate, Guid customerId):base(Guid.NewGuid())
         {
