@@ -6,15 +6,15 @@
     public class Customer : DDDEntity
     {
         private readonly List<Order> _orders = [];
+        private readonly List<Address> _addresses = new List<Address>();
 
         // Private constructor for EF Core
-        protected Customer()
+        protected Customer() 
         {
-            this.Strategy = ComparisonStrategy.Platonic;
         }
-            
+
         // Private constructor for creating a customer
-        private Customer(Guid id, string name, Email email, CustomerType customerType) :base(id)
+        private Customer(Guid id, string name, Email email, CustomerType customerType) : base(id)
         {
             Name = name;
             Email = email;
@@ -40,6 +40,9 @@
 
         [Required(ErrorMessage="Email is required.")]
         public Email Email { get; private set; } // Customer's email (value object)
+        
+        public virtual IReadOnlyList<Address> Addresses => _addresses.AsReadOnly();
+        
         public DateTime CreatedAt { get; private set; } // When the customer was created
 
         public virtual IReadOnlyList<Order> Orders => _orders.AsReadOnly();
@@ -82,6 +85,19 @@
             if (order == null)
                 throw new OrderValidityException("Order not found.");
             order.Cancel();
+        }
+
+        public void AddAddress(string street, string cityName, string state, string zipCode, ICityValidator validator)
+        {
+            var address = Address.Create(street, cityName, state, zipCode, validator);
+            _addresses.Add(address);
+        }
+
+        public void RemoveAddress(string street, string cityName, string state, string zipCode, ICityValidator validator)
+        {
+            var addressToRemove = Address.Create(street, cityName, state, zipCode, validator);
+            if (!_addresses.Remove(addressToRemove))
+                throw new AddressValidityException("No address found matching the provided address.");
         }
     }
 }
