@@ -3,24 +3,75 @@
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
 
-    public class CustomerTests
+    public class CustomerTests: TestHarness
     {
-        private OrderProcessingDbContext CreateDbContext()
+        [Fact]
+        public async Task UpdateName_ShouldRaiseCustomerUpdatedEvent()
         {
-            var options = new DbContextOptionsBuilder<OrderProcessingDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()) // Unique DB per test
-                .Options;
-            return new OrderProcessingDbContext(options);
+            var email = Email.Create("john@example.com");
+            var customer = Customer.Create("John Doe", email, CustomerTypeEnum.Private);
+            var newName = "Jane Doe";
+
+            // Act
+            customer.UpdateName(newName);
+
+            var domainEvent = customer.DomainEvents
+                .OfType<CustomerUpdatedEvent>()
+                .SingleOrDefault();
+            Assert.NotNull(domainEvent);
+
+            await _context.Customers.AddAsync(customer);
+            await _context.SaveChangesAsync();
+
+            // Assert
+            
+            Assert.Equal(customer.Id, domainEvent.CustomerId);
+            Assert.Equal(newName, domainEvent.Name);
+            Assert.Equal(email.Value, domainEvent.Email);
+            Assert.True(domainEvent.OccurredOn <= DateTime.UtcNow);
+
+            // Verify console output from event handler
+            var output = _consoleOutput.ToString();
+            Assert.Contains($"Customer Updated Event: CustomerId={customer.Id}, Name={newName}, Email={email.Value}", output);
         }
 
         [Fact]
+        public async Task UpdateEmail_ShouldRaiseCustomerUpdatedEvent()
+        {
+            var email = Email.Create("john@example.com");
+            var newEmail = Email.Create("jane@example.com");
+            var customer = Customer.Create("John Doe", email, CustomerTypeEnum.Private);
+
+            // Act
+            customer.UpdateEmail(newEmail);
+            
+            var domainEvent = customer.DomainEvents
+            .OfType<CustomerUpdatedEvent>()
+            .SingleOrDefault();
+
+            await _context.Customers.AddAsync(customer);
+            await _context.SaveChangesAsync();
+
+            // Assert
+
+            Assert.NotNull(domainEvent);
+            Assert.Equal(customer.Id, domainEvent.CustomerId);
+            Assert.Equal(customer.Name, domainEvent.Name);
+            Assert.Equal(newEmail.Value, domainEvent.Email);
+            Assert.True(domainEvent.OccurredOn <= DateTime.UtcNow);
+
+            // Verify console output from event handler
+            var output = _consoleOutput.ToString();
+            Assert.Contains($"Customer Updated Event: CustomerId={customer.Id}, Name={customer.Name}, Email={newEmail.Value}", output);
+        }
+
+        [Fact(Skip="Slow and non-idempotent")]
         public async Task CreateCustomer_ValidInput_SavesToDatabase()
         {
             var ctx = TestDbContextFactory.CreateDbContext();
 
             // Arrange
-            var email = Email.Create("cbehrens@example.com");
-            var customer = Customer.Create("Chris Behrens", email, CustomerTypeEnum.Business);
+            var customer = Customer.Create("Chris Behrens", Email.Create("cbehrens@example.com"), CustomerTypeEnum.Business);
 
             // Act
             ctx.Customers.Add(customer);

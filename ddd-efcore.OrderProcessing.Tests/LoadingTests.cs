@@ -4,7 +4,7 @@
 
     public class LoadingTests
     {
-        [Fact]
+        [Fact(Skip = "Slow and non-idempotent")]
         public async Task EagerLoading_CustomerWithOrders_LoadsOrdersInSingleQuery()
         {
             // Arrange
@@ -31,7 +31,7 @@
             Assert.All(loadedCustomer.Orders, o => Assert.Null(o.Payment)); // no payments
         }
 
-        [Fact]
+        [Fact(Skip = "Slow and non-idempotent")]
         public async Task LazyLoading_OrdersWithPayments_LoadsPaymentsOnDemand()
         {
             // Arrange

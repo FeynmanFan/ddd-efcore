@@ -6,7 +6,7 @@
     using System.Linq;
     using Xunit;
 
-    public class OrderTests
+    public class OrderTests: TestHarness
     {
         [Fact(Skip = "Slow and non-idempotent")]
         public async Task CreateOrder_SavesToDatabase()

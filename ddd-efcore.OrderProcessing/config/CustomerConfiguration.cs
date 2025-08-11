@@ -23,6 +23,14 @@ namespace ddd_efcore.OrderProcessing.config
                      .HasColumnName("Email");
             });
 
+            builder.Metadata.FindNavigation(nameof(Customer.Addresses))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.HasMany<Address>(c => c.Addresses)
+                .WithOne()
+                .HasForeignKey("CustomerId")
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(c => c.CustomerType)
                 .IsRequired()
                 .HasConversion(
@@ -35,6 +43,8 @@ namespace ddd_efcore.OrderProcessing.config
                .WithOne()
                .HasForeignKey("CustomerId")
                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Ignore(c => c.DomainEvents);
         }
     }
 }

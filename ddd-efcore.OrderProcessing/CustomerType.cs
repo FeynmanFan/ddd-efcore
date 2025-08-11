@@ -24,7 +24,7 @@
         public static CustomerType Create(int value)
         {
             if (!Enum.IsDefined(typeof(CustomerTypeEnum), value))
-                throw new OrderValidityException($"Invalid customer type value: {value}. Allowed values are 1 (Private) or 2 (Business).");
+                throw new ArgumentException($"Invalid customer type value: {value}. Allowed values are 1 (Private) or 2 (Business).");
 
             return new CustomerType((CustomerTypeEnum)value);
         }

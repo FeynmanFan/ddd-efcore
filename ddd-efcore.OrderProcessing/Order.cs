@@ -54,7 +54,7 @@
         Cancelled
     }
 
-    public class OrderValidityException : Exception
+    public class OrderValidityException : ApplicationException
     {
         public OrderValidityException(string message) : base(message) { }
     }

@@ -11,6 +11,7 @@ namespace ddd_efcore.OrderProcessing
     public abstract class DDDObject
     {
         protected ComparisonStrategy Strategy { get; set; }
+        private readonly List<IDomainEvent> _domainEvents = [];
 
         protected abstract object[] GetComparisonValues();
 
@@ -30,6 +31,18 @@ namespace ddd_efcore.OrderProcessing
             }
 
             this.ValidateSpecific();
+        }
+
+        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+        public void AddDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
+        public void ClearDomainEvents()
+        {
+            this._domainEvents.Clear();
         }
 
         protected virtual void ValidateSpecific()

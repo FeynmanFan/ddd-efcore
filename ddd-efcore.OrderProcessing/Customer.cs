@@ -55,6 +55,7 @@
             Name = newName;
 
             this.Validate();
+            AddDomainEvent(new CustomerUpdatedEvent(Id, newName, Email.Value));
         }
 
         // Domain behavior: Update email
@@ -63,6 +64,7 @@
             Email = newEmail;
 
             this.Validate();
+            AddDomainEvent(new CustomerUpdatedEvent(Id, this.Name, Email.Value));
         }
 
         public void PlaceOrder(decimal amount, DateTime orderDate)
