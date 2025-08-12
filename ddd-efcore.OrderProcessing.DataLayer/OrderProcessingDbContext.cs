@@ -1,11 +1,11 @@
 ﻿using ddd_efcore.Auditing;
-using ddd_efcore.OrderProcessing.config;
+using ddd_efcore.OrderProcessing.DataLayer.config;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 
-namespace ddd_efcore.OrderProcessing
+namespace ddd_efcore.OrderProcessing.DataLayer
 {
     public class OrderProcessingDbContext(DbContextOptions<OrderProcessingDbContext> options) : DbContext(options)
     {

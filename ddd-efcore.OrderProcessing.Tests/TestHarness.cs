@@ -1,6 +1,7 @@
 ﻿namespace ddd_efcore.OrderProcessing.Tests
 {
     using ddd_efcore.Auditing;
+    using ddd_efcore.OrderProcessing.DataLayer;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;

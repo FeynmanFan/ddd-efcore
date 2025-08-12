@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace ddd_efcore.OrderProcessing.config
+﻿namespace ddd_efcore.OrderProcessing.DataLayer.config
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
     {
         public void Configure(EntityTypeBuilder<Payment> builder)

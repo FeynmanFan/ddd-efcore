@@ -1,4 +1,4 @@
-﻿namespace ddd_efcore.OrderProcessing.config
+﻿namespace ddd_efcore.OrderProcessing.DataLayer.config
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;

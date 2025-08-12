@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddd-efcore.OrderProcessing.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddd-efcore.Auditing", "..\ddd-efcore.Auditing\ddd-efcore.Auditing.csproj", "{8227CCC0-EB8B-4950-BA0A-6151820F1FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddd-efcore.OrderProcessing.DataLayer", "..\ddd-efcore.OrderProcessing.DataLayer\ddd-efcore.OrderProcessing.DataLayer.csproj", "{320D89BC-6AE0-4F5E-B146-20D02866A0BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8227CCC0-EB8B-4950-BA0A-6151820F1FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8227CCC0-EB8B-4950-BA0A-6151820F1FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8227CCC0-EB8B-4950-BA0A-6151820F1FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320D89BC-6AE0-4F5E-B146-20D02866A0BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320D89BC-6AE0-4F5E-B146-20D02866A0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320D89BC-6AE0-4F5E-B146-20D02866A0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320D89BC-6AE0-4F5E-B146-20D02866A0BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

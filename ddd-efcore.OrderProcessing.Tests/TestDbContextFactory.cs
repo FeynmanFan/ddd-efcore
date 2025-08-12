@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using ddd_efcore.OrderProcessing.DataLayer;
 
     public static class TestDbContextFactory
     {
