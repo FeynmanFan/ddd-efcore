@@ -6,14 +6,12 @@ namespace ddd_efcore.OrderProcessing
     {
         private const string StateRegexPattern = @"^(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)$";
         private const string ZipCodeRegexPattern = @"^\d{5}$";
+        private readonly IReadOnlyList<ZipCode> _zipCodes;
 
-        private static readonly Dictionary<string, (string City, string State)> ZipCodeLookup = new()
+        public StaticCityValidator(IReadOnlyList<ZipCode> zipCodes)
         {
-            { "90210", ("Beverly Hills", "CA") },
-            { "10001", ("New York", "NY") },
-            { "76103", ("Fort Worth", "TX") },
-            { "00501", ("Holtsville", "NY") }
-        };
+            _zipCodes = zipCodes ?? throw new ArgumentNullException(nameof(zipCodes));
+        }
 
         public bool IsValidCity(string zipCode, string cityName, string state)
         {
@@ -38,9 +36,10 @@ namespace ddd_efcore.OrderProcessing
                 validationErrors.Add("State must be a valid U.S. state code (e.g., CA, NY).");
 
             // Validate ZipCode alignment
-            if (ZipCodeLookup.TryGetValue(zipCode, out var expected))
+            var zipCodeEntry = _zipCodes.FirstOrDefault(z => z.ZipCodeValue == zipCode);
+            if (zipCodeEntry != null)
             {
-                if (expected.City.ToLower() != cityName.ToLower() || expected.State.ToLower() != state.ToLower())
+                if (zipCodeEntry.City.ToLower() != cityName.ToLower() || zipCodeEntry.State.ToLower() != state.ToLower())
                     validationErrors.Add($"Zip code {zipCode} does not match city {cityName} or state {state}.");
             }
             else

@@ -1,5 +1,6 @@
 ﻿namespace ddd_efcore.OrderProcessing.Tests
 {
+    using ddd_efcore.Auditing;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@
         protected readonly OrderProcessingDbContext _context;
         protected readonly IMediator _mediator;
         protected readonly StringWriter _consoleOutput;
+        protected readonly IAuditLogger _auditLogger;
 
         public TestHarness()
         {
@@ -28,12 +30,16 @@
             // Add MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CustomerUpdatedEventHandler).Assembly));
 
+            // add logger
+            services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
+
             // Build service provider
             _serviceProvider = services.BuildServiceProvider();
 
             // Resolve dependencies
             _context = _serviceProvider.GetRequiredService<OrderProcessingDbContext>();
             _mediator = _serviceProvider.GetRequiredService<IMediator>();
+            _auditLogger = _serviceProvider.GetRequiredService<IAuditLogger>();
 
             // Capture console output
             _consoleOutput = new StringWriter();

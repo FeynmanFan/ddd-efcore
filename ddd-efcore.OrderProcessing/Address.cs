@@ -26,7 +26,7 @@
 
             // Validate City, State, ZipCode
             if (!validator.IsValidCity(zipCode, cityName, state))
-                validationErrors.Add($"Invalid address: Zip code {zipCode} does not match city {cityName} or state {state}.");
+                validationErrors.Add($"Zip code {zipCode} does not match city {cityName} or state {state}.");
 
             // Throw if any validation errors
             if (validationErrors.Any())
